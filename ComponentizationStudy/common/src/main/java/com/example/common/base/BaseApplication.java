@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.example.common.util.Cons;
 
-class BaseApplication extends Application {
+public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
