@@ -54,6 +54,9 @@ dependencies {
     // 公共基础库
     implementation project(":common")
 
+    // 依赖注解
+    implementation project(':arouter_annotation')
+
     // 如果是发布版本，说明是集成化模式，各个模块不能独立运行了
     if(isRelease){
         implementation project(":order")

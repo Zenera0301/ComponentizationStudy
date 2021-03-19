@@ -13,6 +13,6 @@ public interface ARouterLoadGroup {
      * 加载路由组Group数据
      * 如："app", ARouter$$Path$$app.class（实现了ARouterLoadPath接口）
      */
-    Map<String, Class<? extends ARouterLoadPath>> loadGroup;
+    Map<String, Class<? extends ARouterLoadPath>> loadGroup();
 
 }

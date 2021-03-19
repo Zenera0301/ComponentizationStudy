@@ -1,5 +1,9 @@
 package com.example.modular.api;
 
+import com.example.modular.annotation.model.RouterBean;
+
+import java.util.Map;
+
 /**
  * Created by DingJing on 2021/3/18
  * Contact me: 847467911@qq.com
@@ -14,5 +18,5 @@ public interface ARouterLoadPath {
      * key : "/app/MainActivity" value: MainActivity信息封装到RouterBean对象中
      *
      */
-    Map<String, RouterBean> loadPath;
+    Map<String, RouterBean> loadPath();
 }

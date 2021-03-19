@@ -5,6 +5,14 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.componentizationstudy.test.ARouter$$Group$$order;
+import com.example.modular.annotation.ARouter;
+import com.example.modular.api.ARouterLoadGroup;
+import com.example.modular.api.ARouterLoadPath;
+
+import java.util.Map;
+
+@ARouter(path = "/app/MainActivity")
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -26,9 +34,14 @@ public class MainActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this, targetClass);
 //        intent.putExtra("name", "simon");
 //        startActivity(intent);
+
     }
 
+    // 最终集成化模式，所有子模块APT生成的类文件都会打包到APK中
     public void jumpPersonal(View view){
-
+        ARouterLoadGroup loadGroup = new ARouter$$Group$$order();
+        Map<String, Class<? extends ARouterLoadPath>> groupMap = loadGroup.loadGroup();
+        // app-personal
+        groupMap.get("")
     }
 }
