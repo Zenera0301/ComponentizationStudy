@@ -1,5 +1,12 @@
+import javax.tools.JavaCompiler
+
 plugins {
     id 'java-library'
+}
+
+// java控制台输出中文乱码
+tasks.withType(JavaCompiler){
+    options.encoding = "UTF-8"
 }
 
 java {

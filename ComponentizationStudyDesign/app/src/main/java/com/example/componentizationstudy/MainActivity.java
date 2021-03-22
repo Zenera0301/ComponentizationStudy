@@ -2,26 +2,45 @@ package com.example.componentizationstudy;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.common.util.Cons;
 import com.example.componentizationstudy.test.ARouter$$Group$$order;
 import com.example.componentizationstudy.test.ARouter$$Group$$personal;
 import com.example.modular.annotation.ARouter;
+import com.example.modular.annotation.Parameter;
 import com.example.modular.annotation.model.RouterBean;
-import com.example.modular.api.ARouterLoadGroup;
-import com.example.modular.api.ARouterLoadPath;
+import com.example.modular.api.core.ARouterLoadGroup;
+import com.example.modular.api.core.ARouterLoadPath;
 
 import java.util.Map;
 
 @ARouter(path = "/app/MainActivity")
 public class MainActivity extends AppCompatActivity {
 
+    @Parameter
+    String name;
+
+    @Parameter(name="dindin")
+    int age = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        if (BuildConfig.isRelease) {
+            Log.e(Cons.TAG, "当前为：集成化模式，除app可运行，其他子模块都是Android Library");
+        } else {
+            Log.e(Cons.TAG, "当前为：组件化模式，app/order/personal子模块都可独立运行");
+        }
+
+        name = getIntent().getStringExtra("name");
+        age = getIntent().getIntExtra("dindin", age);
     }
 
     public void jumpOrder(View view){
@@ -51,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
             RouterBean routerBean = pathMap.get("/order/Order_MainActivity");
             if (routerBean != null) {
                 Intent intent = new Intent(this, routerBean.getClazz());
-                intent.putExtra("name", "simon");
+                intent.putExtra("name", "dj");
+                intent.putExtra("dindin", 26);
                 startActivity(intent);
             }
         } catch (IllegalAccessException e) {

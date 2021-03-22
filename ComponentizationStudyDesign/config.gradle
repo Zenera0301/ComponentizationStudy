@@ -8,6 +8,9 @@ ext{
     // true：集成化模式，子模块不能独立运行
     isRelease = true
 
+    // 包名，用于存放APT生成的类文件
+    packageNameForAPT = "com.example.componentizationstudy.apt"
+
     // 建立Map存储，对象名，key都可以自定义，groovy糖果语法，灵活
     androidId = [
             compileSdkVersion : 30,

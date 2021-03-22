@@ -1,7 +1,7 @@
 package com.example.componentizationstudy.test;
 
 import com.example.modular.annotation.model.RouterBean;
-import com.example.modular.api.ARouterLoadPath;
+import com.example.modular.api.core.ARouterLoadPath;
 import com.example.order.Order_MainActivity;
 
 import java.util.HashMap;

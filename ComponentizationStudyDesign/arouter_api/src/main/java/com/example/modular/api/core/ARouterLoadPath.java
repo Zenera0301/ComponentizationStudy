@@ -1,4 +1,4 @@
-package com.example.modular.api;
+package com.example.modular.api.core;
 
 import com.example.modular.annotation.model.RouterBean;
 

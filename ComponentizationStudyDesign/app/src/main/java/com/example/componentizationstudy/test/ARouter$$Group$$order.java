@@ -1,7 +1,7 @@
 package com.example.componentizationstudy.test;
 
-import com.example.modular.api.ARouterLoadGroup;
-import com.example.modular.api.ARouterLoadPath;
+import com.example.modular.api.core.ARouterLoadGroup;
+import com.example.modular.api.core.ARouterLoadPath;
 
 import java.util.HashMap;
 import java.util.Map;

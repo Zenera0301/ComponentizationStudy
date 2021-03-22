@@ -44,7 +44,8 @@ public class RouterBean {
         return new RouterBean(type, clazz, path, group);
     }
 
-    private final static class Builder{
+    // 如果这里是private，则是用的建造者模式；如果用的public，则可以在外部调用这个函数
+    public final static class Builder{
         // 类节点
         private Element element;
         // 路由的组名

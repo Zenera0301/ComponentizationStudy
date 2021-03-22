@@ -25,6 +25,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("boolean", "isRelease", String.valueOf(isRelease))
+
+        // 在gradle文件中配置选项参数值（用于APT传参接收）
+        // 切记：必须写在defaultConfig节点下
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [moduleName: project.getName(), packageNameForAPT: packageNameForAPT]
+            }
+        }
     }
 
     buildTypes {
@@ -59,8 +67,11 @@ dependencies {
     // 循环引入第三方库
     support.each{k, v->implementation v}
 
-    // 依赖注解
+    // 依赖注解，引入annotation，处理@ARouter注解
     implementation project(':arouter_annotation')
+
+    // 注解处理器
+    annotationProcessor project(':arouter_compiler')
 
     // 公共基础库
     implementation project(":common")
