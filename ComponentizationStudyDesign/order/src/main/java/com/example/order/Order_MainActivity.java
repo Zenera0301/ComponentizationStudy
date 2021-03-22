@@ -1,9 +1,14 @@
 package com.example.order;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.common.util.Cons;
+
+import javax.security.auth.login.LoginException;
 
 public class Order_MainActivity extends AppCompatActivity {
 
@@ -11,6 +16,12 @@ public class Order_MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.order_activity_main);
+
+        Log.i(Cons.TAG, "onCreate: common/Order_MainActivity");
+
+        if(getIntent() != null){
+            Log.i(Cons.TAG, "order:" + getIntent().getStringExtra("name"));
+        }
     }
 
     public void jumpApp(View view){
