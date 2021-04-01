@@ -1,8 +1,8 @@
+com/example/modular/api/core/ParameterLoad.java
+ com.example.modular.api.core.ParameterLoad
 com/example/modular/api/BuildConfig.java
  com.example.modular.api.BuildConfig
 com/example/modular/api/core/ARouterLoadGroup.java
  com.example.modular.api.core.ARouterLoadGroup
 com/example/modular/api/core/ARouterLoadPath.java
  com.example.modular.api.core.ARouterLoadPath
-com/example/modular/api/core/ParameterLoad.java
- com.example.modular.api.core.ParameterLoad
