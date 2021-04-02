@@ -1,6 +1,6 @@
 package com.example.modular.compiler;
 
-import com.example.modular.annotation.Parameter;
+import com.example.annotation.Parameter;
 import com.example.modular.compiler.factory.ParameterFactory;
 import com.example.modular.compiler.utils.Constants;
 import com.example.modular.compiler.utils.EmptyUtils;

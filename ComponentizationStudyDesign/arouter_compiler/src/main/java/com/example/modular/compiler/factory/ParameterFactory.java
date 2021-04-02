@@ -1,17 +1,21 @@
 package com.example.modular.compiler.factory;
 
-import com.example.modular.annotation.Parameter;
+
+import com.example.annotation.Parameter;
 import com.example.modular.compiler.utils.Constants;
 import com.example.modular.compiler.utils.EmptyUtils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeName;
 
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
 public class ParameterFactory {
@@ -25,18 +29,29 @@ public class ParameterFactory {
     // Messager用来报告错误，警告和其他提示信息
     private Messager messager;
 
+    // type(类信息)工具类，包含用于操作TypeMirror的工具方法
+    private Types typeUtils;
+
+    // 获取元素接口信息（生成类文件需要的接口实现类）
+    private TypeMirror callMirror;
+
     // 类名，如：MainActivity
     private ClassName className;
 
     private ParameterFactory(Builder builder) {
         this.messager = builder.messager;
         this.className = builder.className;
+        typeUtils = builder.typeUtils;
 
         // 通过方法参数体构建方法体：public void loadParameter(Object target) {
         methodBuidler = MethodSpec.methodBuilder(Constants.PARAMETER_METHOD_NAME)
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(builder.parameterSpec);
+
+        this.callMirror = builder.elementUtils
+                .getTypeElement(Constants.CALL)
+                .asType();
     }
 
     /**
@@ -83,6 +98,15 @@ public class ParameterFactory {
             // t.s = t.getIntent.getStringExtra("s");
             if (typeMirror.toString().equalsIgnoreCase(Constants.STRING)) {
                 methodContent += "getStringExtra($S)";
+                // 类型工具类方法isSubtype，相当于instance一样
+            } else if (typeUtils.isSubtype(typeMirror, callMirror)) {
+                // t.iUser = (IUserImpl) RouterManager.getInstance().build("/order/getUserInfo").navigation(t);
+                methodContent = "t." + fieldName + " = ($T) $T.getInstance().build($S).navigation(t)";
+                methodBuidler.addStatement(methodContent,
+                        TypeName.get(typeMirror),
+                        ClassName.get(Constants.BASE_PACKAGE, Constants.ROUTER_MANAGER),
+                        annotationValue);
+                return;
             }
         }
 
@@ -99,6 +123,12 @@ public class ParameterFactory {
 
         // Messager用来报告错误，警告和其他提示信息
         private Messager messager;
+
+        // 操作Element工具类 (类、函数、属性都是Element)
+        private Elements elementUtils;
+
+        // type(类信息)工具类，包含用于操作TypeMirror的工具方法
+        private Types typeUtils;
 
         // 类名，如：MainActivity
         private ClassName className;
@@ -117,6 +147,16 @@ public class ParameterFactory {
 
         public Builder setClassName(ClassName className) {
             this.className = className;
+            return this;
+        }
+
+        public Builder setElementUtils(Elements elementUtils) {
+            this.elementUtils = elementUtils;
+            return this;
+        }
+
+        public Builder setTypeUtils(Types typeUtils) {
+            this.typeUtils = typeUtils;
             return this;
         }
 

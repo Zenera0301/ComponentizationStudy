@@ -1,7 +1,8 @@
 package com.example.modular.compiler;
 
-import com.example.modular.annotation.ARouter;
-import com.example.modular.annotation.model.RouterBean;
+
+import com.example.annotation.ARouter;
+import com.example.annotation.model.RouterBean;
 import com.example.modular.compiler.utils.Constants;
 import com.example.modular.compiler.utils.EmptyUtils;
 import com.google.auto.service.AutoService;
@@ -53,7 +54,7 @@ import javax.tools.Diagnostic;
 // 允许/支持的注解类型，让注解处理器处理
 @SupportedAnnotationTypes({Constants.IROUTER_ANNOTATION_TYPES})
 // 指定JDK编译版本
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
 // 注解处理器接收的参数
 @SupportedOptions({Constants.MODULE_NAME, Constants.APT_PACKAGE})
 public class ARouterProcessor extends AbstractProcessor {
@@ -67,10 +68,10 @@ public class ARouterProcessor extends AbstractProcessor {
     // Messager用来报告错误，警告和其他提示信息
     private Messager messager;
 
-    // 文件生成器 类/资源，Filter用来创建新的源文件，class文件以及辅助文件
+    // 文件生成器 类/资源，Filter用来创建新的类文件，class文件以及辅助文件
     private Filer filer;
 
-    // 子模块名，如：app/order/personal。需要拼接类名时用到（必传）ARouter$$Group$$personal
+    // 子模块名，如：app/order/personal。需要拼接类名时用到（必传）ARouter$$Group$$order
     private String moduleName;
 
     // 包名，用于存放APT生成的类文件
@@ -100,7 +101,7 @@ public class ARouterProcessor extends AbstractProcessor {
             packageNameForAPT = options.get(Constants.APT_PACKAGE);
             // 有坑：Diagnostic.Kind.ERROR，异常会自动结束，不像安卓中Log.e
             messager.printMessage(Diagnostic.Kind.NOTE, "moduleName >>> " + moduleName);
-            messager.printMessage(Diagnostic.Kind.NOTE, "packageNameForAPT >>> " + packageNameForAPT);
+            messager.printMessage(Diagnostic.Kind.NOTE, "packageName >>> " + packageNameForAPT);
         }
 
         // 必传参数判空（乱码问题：添加java控制台输出中文乱码）
@@ -127,7 +128,7 @@ public class ARouterProcessor extends AbstractProcessor {
             if (!EmptyUtils.isEmpty(elements)) {
                 // 解析元素
                 try {
-                    parseElements(elements); // 解析所有被 @ARouter 注解的 类元素集合
+                    parseElements(elements);
                     return true;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -143,9 +144,11 @@ public class ARouterProcessor extends AbstractProcessor {
     private void parseElements(Set<? extends Element> elements) throws IOException {
         // 通过Element工具类，获取Activity、Callback类型
         TypeElement activityType = elementUtils.getTypeElement(Constants.ACTIVITY);
+        TypeElement callType = elementUtils.getTypeElement(Constants.CALL);
 
         // 显示类信息（获取被注解节点，类节点）这里也叫自描述 Mirror
         TypeMirror activityMirror = activityType.asType();
+        TypeMirror callMirror = callType.asType();
 
         // 遍历节点
         for (Element element : elements) {
@@ -167,6 +170,8 @@ public class ARouterProcessor extends AbstractProcessor {
             // 类型工具类方法isSubtype，相当于instance一样
             if (typeUtils.isSubtype(elementMirror, activityMirror)) {
                 bean.setType(RouterBean.Type.ACTIVITY);
+            } else if (typeUtils.isSubtype(elementMirror, callMirror)) {
+                bean.setType(RouterBean.Type.CALL);
             } else {
                 // 不匹配抛出异常，这里谨慎使用！考虑维护问题
                 throw new RuntimeException("@ARouter注解目前仅限用于Activity类之上");
@@ -198,7 +203,6 @@ public class ARouterProcessor extends AbstractProcessor {
         // 判断是否有需要生成的类文件
         if (EmptyUtils.isEmpty(tempPathMap)) return;
 
-        // 方法的返回值Map<String, RouterBean>
         TypeName methodReturns = ParameterizedTypeName.get(
                 ClassName.get(Map.class), // Map
                 ClassName.get(String.class), // Map<String,
@@ -213,7 +217,7 @@ public class ARouterProcessor extends AbstractProcessor {
                     .addModifiers(Modifier.PUBLIC) // public修饰符
                     .returns(methodReturns); // 方法返回值
 
-            // 不循环部分：遍历之前：Map<String, RouterBean> pathMap = new HashMap<>();
+            // 遍历之前：Map<String, RouterBean> pathMap = new HashMap<>();
             methodBuidler.addStatement("$T<$T, $T> $N = new $T<>()",
                     ClassName.get(Map.class),
                     ClassName.get(String.class),
@@ -223,15 +227,11 @@ public class ARouterProcessor extends AbstractProcessor {
 
             // 一个分组，如：ARouter$$Path$$app。有很多详细路径信息，如：/app/MainActivity、/app/OtherActivity
             List<RouterBean> pathList = entry.getValue();
-            // 循环部分: 方法内容配置（遍历每个分组中每个路由详细路径）
+            // 方法内容配置（遍历每个分组中每个路由详细路径）
             for (RouterBean bean : pathList) {
                 // 类似String.format("hello %s net163 %d", "net", 163)通配符
-                // pathMap.put("/app/MainActivity",
-                //              RouterBean.create(
-                //                  RouterBean.Type.ACTIVITY,
-                //                  MainActivity.class,
-                //                  "/app/MainActivity",
-                //                  "app"));
+                // pathMap.put("/app/MainActivity", RouterBean.create(
+                //        RouterBean.Type.ACTIVITY, MainActivity.class, "/app/MainActivity", "app"));
                 methodBuidler.addStatement(
                         "$N.put($S, $T.create($T.$L, $T.class, $S, $S))",
                         Constants.PATH_PARAMETER_NAME, // pathMap.put
@@ -245,7 +245,7 @@ public class ARouterProcessor extends AbstractProcessor {
                 );
             }
 
-            // 不循环部分：遍历之后：return pathMap;
+            // 遍历之后：return pathMap;
             methodBuidler.addStatement("return $N", Constants.PATH_PARAMETER_NAME);
 
             // 最终生成的类文件名
@@ -278,7 +278,6 @@ public class ARouterProcessor extends AbstractProcessor {
         // 判断是否有需要生成的类文件
         if (EmptyUtils.isEmpty(tempGroupMap) || EmptyUtils.isEmpty(tempPathMap)) return;
 
-
         TypeName methodReturns = ParameterizedTypeName.get(
                 ClassName.get(Map.class), // Map
                 ClassName.get(String.class), // Map<String,
@@ -294,7 +293,7 @@ public class ARouterProcessor extends AbstractProcessor {
                 .addModifiers(Modifier.PUBLIC) // public修饰符
                 .returns(methodReturns); // 方法返回值
 
-        // 不循环部分：遍历之前：Map<String, Class<? extends ARouterLoadPath>> groupMap = new HashMap<>();
+        // 遍历之前：Map<String, Class<? extends ARouterLoadPath>> groupMap = new HashMap<>();
         methodBuidler.addStatement("$T<$T, $T> $N = new $T<>()",
                 ClassName.get(Map.class),
                 ClassName.get(String.class),
@@ -303,7 +302,7 @@ public class ARouterProcessor extends AbstractProcessor {
                 Constants.GROUP_PARAMETER_NAME,
                 HashMap.class);
 
-        // 循环部分：方法内容配置
+        // 方法内容配置
         for (Map.Entry<String, String> entry : tempGroupMap.entrySet()) {
             // 类似String.format("hello %s net163 %d", "net", 163)通配符
             // groupMap.put("main", ARouter$$Path$$app.class);
@@ -314,7 +313,7 @@ public class ARouterProcessor extends AbstractProcessor {
                     ClassName.get(packageNameForAPT, entry.getValue()));
         }
 
-        // 不循环部分：遍历之后：return groupMap;
+        // 遍历之后：return groupMap;
         methodBuidler.addStatement("return $N", Constants.GROUP_PARAMETER_NAME);
 
         // 最终生成的类文件名

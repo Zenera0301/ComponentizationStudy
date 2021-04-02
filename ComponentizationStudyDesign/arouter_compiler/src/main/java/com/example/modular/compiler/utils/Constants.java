@@ -27,7 +27,8 @@ public class Constants {
     public static final String AROUTE_PATH = BASE_PACKAGE + ".core.ARouterLoadPath";
     // 获取参数，加载接口
     public static final String PARAMETER_LOAD = BASE_PACKAGE + ".core.ParameterLoad";
-
+    // 跨模块业务，回调接口
+    public static final String CALL = BASE_PACKAGE + ".core.Call";
 
     // 路由组Group，参数名
     public static final String GROUP_PARAMETER_NAME = "groupMap";
