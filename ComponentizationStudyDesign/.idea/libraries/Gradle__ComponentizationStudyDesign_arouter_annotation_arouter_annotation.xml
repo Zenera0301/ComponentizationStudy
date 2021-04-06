@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: ComponentizationStudyDesign.arouter_annotation.arouter_annotation">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/arouter_annotation/build/libs/arouter_annotation.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

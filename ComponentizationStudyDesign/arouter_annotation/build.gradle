@@ -1,19 +1,13 @@
-import javax.tools.JavaCompiler
-
-plugins {
-    id 'java-library'
-}
+apply plugin: 'java-library'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 // java控制台输出中文乱码
-tasks.withType(JavaCompiler){
+tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
-}
+sourceCompatibility = "7"
+targetCompatibility = "7"

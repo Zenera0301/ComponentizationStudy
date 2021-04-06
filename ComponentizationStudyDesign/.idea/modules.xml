@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ComponentizationStudyDesign.iml" filepath="$PROJECT_DIR$/.idea/modules/ComponentizationStudyDesign.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ComponentizationStudyDesign.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ComponentizationStudyDesign.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/arouter_annotation/ComponentizationStudyDesign.arouter_annotation.iml" filepath="$PROJECT_DIR$/.idea/modules/arouter_annotation/ComponentizationStudyDesign.arouter_annotation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/arouter_api/ComponentizationStudyDesign.arouter_api.iml" filepath="$PROJECT_DIR$/.idea/modules/arouter_api/ComponentizationStudyDesign.arouter_api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/arouter_compiler/ComponentizationStudyDesign.arouter_compiler.iml" filepath="$PROJECT_DIR$/.idea/modules/arouter_compiler/ComponentizationStudyDesign.arouter_compiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/ComponentizationStudyDesign.common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/ComponentizationStudyDesign.common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/order/ComponentizationStudyDesign.order.iml" filepath="$PROJECT_DIR$/.idea/modules/order/ComponentizationStudyDesign.order.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/personal/ComponentizationStudyDesign.personal.iml" filepath="$PROJECT_DIR$/.idea/modules/personal/ComponentizationStudyDesign.personal.iml" />
+    </modules>
+  </component>
+</project>

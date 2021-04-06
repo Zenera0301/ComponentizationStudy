@@ -1,8 +1,1 @@
-include ':arouter_api'
-include ':arouter_compiler'
-include ':arouter_annotation'
-include ':common'
-include ':personal'
-include ':order'
-include ':app'
-rootProject.name = "ComponentizationStudy"
+include ':app', ':common', ':order', ':personal', ':arouter_api', ':arouter_compiler', ':arouter_annotation'
